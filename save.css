@@ -1,0 +1,20 @@
+/* ============================================
+   save.css — "파일 저장" 페이지 전체 레이아웃 (반응형)
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F2F2F7;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system,
+               BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  color: #232121;
+  overflow: hidden;
+  word-break: keep-all;
+}

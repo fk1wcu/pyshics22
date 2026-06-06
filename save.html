@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>파일 저장 - Desktop</title>
+
+  <!-- 한글 폰트 (Pretendard) -->
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+  <!-- 페이지 레이아웃 (반응형) -->
+  <link rel="stylesheet" href="css/save.css">
+
+  <!-- 컴포넌트 -->
+  <link rel="stylesheet" href="css/components/export-frame.css">
+
+  <!-- 버튼 (figma-button 재활용) -->
+  <link rel="stylesheet" href="css/buttons/figma-button.css">
+</head>
+<body>
+
+  <div class="export-frame">
+
+    <!-- 흰색 뷰포트 (이미지가 들어갈 자리) -->
+    <div class="export-frame__viewport" id="viewport">
+      <canvas id="segChartCanvas" width="1600" height="900"></canvas>
+    </div>
+
+    <!-- 하단 액션 영역 -->
+    <div class="export-frame__actions">
+      <button class="figma-button" type="button" id="saveBtn">
+        파일 저장(PNG)
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const viewport = document.getElementById('viewport');
+    const canvas   = document.getElementById('segChartCanvas');
+    const saveBtn  = document.getElementById('saveBtn');
+
+    const raw = sessionStorage.getItem('segmentationData');
+
+    if (!raw) {
+      // 데이터 없음 → 캔버스 제거, 안내문만 표시, 저장 버튼 비활성
+      canvas.remove();
+      const msg = document.createElement('div');
+      msg.id = 'segEmpty';
+      msg.textContent = '세그멘테이션 데이터가 없습니다. 메인 페이지에서 영상 업로드 후 시작 버튼을 눌러주세요.';
+      viewport.appendChild(msg);
+      saveBtn.disabled = true;
+    } else {
+      const data = JSON.parse(raw);
+      renderToCanvas(canvas, data);
+    }
+
+    // ===== PNG 저장 =====
+    saveBtn.addEventListener('click', () => {
+      if (saveBtn.disabled) return;
+      const link = document.createElement('a');
+      link.download = `segmentation_${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    // ===== 캔버스에 헤더 + 그래프 그리기 =====
+    function renderToCanvas(canvas, data) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+
+      drawHeader(ctx, data, W);
+      drawChart(ctx, data, W, H);
+    }
+
+    function drawHeader(ctx, data, W) {
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = 'bold 30px "Pretendard Variable", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText('색상 세그멘테이션 결과', 60, 50);
+
+      const chipY = 110;
+      const chipSize = 42;
+      let x = 60;
+
+      // 첫 색상 칩
+      const f = data.firstRgb;
+      ctx.fillStyle = `rgb(${f.r}, ${f.g}, ${f.b})`;
+      roundRect(ctx, x, chipY, chipSize, chipSize, 6); ctx.fill();
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+      roundRect(ctx, x, chipY, chipSize, chipSize, 6); ctx.stroke();
+
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 14px "Courier New", monospace';
+      ctx.textBaseline = 'top';
+      ctx.fillText(data.firstHex, x + chipSize + 12, chipY + 4);
+      ctx.fillStyle = '#888';
+      ctx.font = '12px "Pretendard Variable", sans-serif';
+      ctx.fillText(
+        `H ${data.firstHsv.h}°  S ${data.firstHsv.s}%  V ${data.firstHsv.v}%`,
+        x + chipSize + 12, chipY + 24
+      );
+
+      x += chipSize + 160;
+
+      // 화살표
+      ctx.fillStyle = '#888';
+      ctx.font = '22px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('→', x, chipY + chipSize / 2);
+
+      x += 38;
+
+      // 마지막 색상 칩
+      const l = data.lastRgb;
+      ctx.fillStyle = `rgb(${l.r}, ${l.g}, ${l.b})`;
+      roundRect(ctx, x, chipY, chipSize, chipSize, 6); ctx.fill();
+      ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+      roundRect(ctx, x, chipY, chipSize, chipSize, 6); ctx.stroke();
+
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 14px "Courier New", monospace';
+      ctx.textBaseline = 'top';
+      ctx.fillText(data.lastHex, x + chipSize + 12, chipY + 4);
+      ctx.fillStyle = '#888';
+      ctx.font = '12px "Pretendard Variable", sans-serif';
+      ctx.fillText(
+        `H ${data.lastHsv.h}°  S ${data.lastHsv.s}%  V ${data.lastHsv.v}%`,
+        x + chipSize + 12, chipY + 24
+      );
+
+      // 우측 통계
+      const totalMatch = data.pixelCounts.reduce((a, b) => a + b, 0);
+      const avgMatch   = totalMatch / data.frameCount;
+      const avgPct     = (avgMatch / data.totalPixels * 100).toFixed(2);
+
+      ctx.fillStyle = '#666';
+      ctx.font = '12px "Pretendard Variable", sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      ctx.fillText(
+        `${data.frameCount}개 프레임 · 프레임당 ${data.totalPixels.toLocaleString()} px`,
+        W - 60, chipY + 4
+      );
+      ctx.fillText(
+        `평균 매칭: ${Math.round(avgMatch).toLocaleString()} px (${avgPct}%)` +
+        (data.hueWraps ? '  ·  H wrap-around' : ''),
+        W - 60, chipY + 24
+      );
+    }
+
+    function drawChart(ctx, data, W, H) {
+      const counts    = data.pixelCounts;
+      const numFrames = counts.length;
+      const maxCount  = Math.max(...counts, 1);
+
+      const padding = { top: 200, right: 80, bottom: 110, left: 140 };
+      const plotW = W - padding.left - padding.right;
+      const plotH = H - padding.top  - padding.bottom;
+
+      // Y축 격자 + 라벨
+      ctx.font = '13px "Pretendard Variable", sans-serif';
+      const ySteps = 5;
+      for (let i = 0; i <= ySteps; i++) {
+        const y = padding.top + (plotH / ySteps) * i;
+        const value = Math.round(maxCount * (1 - i / ySteps));
+
+        ctx.strokeStyle = '#EEE';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(W - padding.right, y);
+        ctx.stroke();
+
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(value.toLocaleString(), padding.left - 14, y);
+      }
+
+      // X축 프레임 번호
+      ctx.fillStyle = '#666';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      const xLabelStep = Math.max(1, Math.ceil(numFrames / 18));
+      for (let i = 0; i < numFrames; i++) {
+        if (i % xLabelStep !== 0 && i !== numFrames - 1) continue;
+        const x = padding.left + (numFrames === 1 ? plotW / 2 : (plotW / (numFrames - 1)) * i);
+        ctx.fillText(`${i + 1}`, x, padding.top + plotH + 14);
+      }
+
+      // 축 타이틀
+      ctx.fillStyle = '#333';
+      ctx.font = '15px "Pretendard Variable", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('프레임', padding.left + plotW / 2, padding.top + plotH + 60);
+
+      ctx.save();
+      ctx.translate(50, padding.top + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('픽셀 수', 0, 0);
+      ctx.restore();
+
+      // 축선
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, padding.top);
+      ctx.lineTo(padding.left, padding.top + plotH);
+      ctx.lineTo(W - padding.right, padding.top + plotH);
+      ctx.stroke();
+
+      if (numFrames === 0) return;
+
+      const points = counts.map((count, i) => ({
+        x: padding.left + (numFrames === 1 ? plotW / 2 : (plotW / (numFrames - 1)) * i),
+        y: padding.top + plotH - (count / maxCount) * plotH
+      }));
+
+      // 면적 그라데이션
+      const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + plotH);
+      grad.addColorStop(0, 'rgba(255, 140, 0, 0.35)');
+      grad.addColorStop(1, 'rgba(255, 140, 0, 0.02)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, padding.top + plotH);
+      points.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(points[points.length - 1].x, padding.top + plotH);
+      ctx.closePath();
+      ctx.fill();
+
+      // 라인
+      ctx.strokeStyle = '#FF8C00';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      points.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else         ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+
+      // 점
+      ctx.fillStyle = '#FF8C00';
+      points.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+  </script>
+
+</body>
+</html>

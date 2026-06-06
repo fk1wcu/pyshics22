@@ -1,0 +1,13 @@
+{
+  "name": "figma-clone",
+  "version": "1.0.0",
+  "description": "물리2 Figma 디자인 HTML/CSS 구현",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

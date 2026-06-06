@@ -1,0 +1,91 @@
+/* ============================================
+   eyedropper-btn.css — 스포이드(Color picker) 버튼
+   ============================================ */
+
+.eyedropper-btn {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 1px solid #D9D9D9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 6px auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.eyedropper-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.eyedropper-btn:active {
+  transform: translateY(0);
+}
+
+.eyedropper-btn--active {
+  background-color: #464549;
+  border-color: #FFFFFF;
+}
+
+.eyedropper-btn--active .eyedropper-btn__icon {
+  color: #FFFFFF;
+}
+
+.eyedropper-btn__icon {
+  width: 26px;
+  height: 26px;
+  color: #232121;
+}
+
+/* 크기 슬라이더 */
+.eyedropper-size {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.eyedropper-size__label {
+  font-size: 12px;
+  color: #D9D9D9;
+  font-family: 'Pretendard Variable', sans-serif;
+}
+
+.eyedropper-size__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #464549;
+  outline: none;
+  cursor: pointer;
+}
+
+.eyedropper-size__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.eyedropper-size__slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}

@@ -1,0 +1,48 @@
+/* ============================================
+   export-frame.css — 어두운 프레임 + 안쪽 흰 영역
+   - 화면 크기에 맞춰 늘어나는 반응형 구조
+   ============================================ */
+
+.export-frame {
+  /* 화면 전체를 채움 */
+  width: 100vw;
+  height: 100vh;
+
+  background-color: #232121;
+  padding: clamp(16px, 2.2vw, 32px);
+
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.6vw, 24px);
+}
+
+/* 가운데 흰 뷰포트 — 남는 공간 전체 차지 */
+.export-frame__viewport {
+  flex: 1;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  min-height: 0;
+  min-width: 0;
+
+  /* 안에 이미지를 넣을 경우 가운데 정렬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 안에 들어갈 이미지가 영역을 넘지 않도록 */
+.export-frame__viewport img,
+.export-frame__viewport canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 하단 액션 영역 (버튼이 위치) */
+.export-frame__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}

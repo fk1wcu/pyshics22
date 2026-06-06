@@ -1,0 +1,34 @@
+/* ============================================
+   figma-button.css — Figma에서 export한 버튼 스타일
+   ============================================ */
+
+/* Figma SDS(Simple Design System) 토큰 정의
+   — 원본 Figma 변수를 그대로 사용 가능하도록 root에 선언 */
+:root {
+  --sds-size-space-200: 8px;
+  --sds-size-space-300: 12px;
+  --sds-size-radius-200: 8px;
+  --sds-size-stroke-border: 1px;
+}
+
+.figma-button {
+  display: flex;
+  width: 118px;
+  height: 52px;
+  padding: var(--sds-size-space-300);          /* 12px */
+  justify-content: center;
+  align-items: center;
+  gap: var(--sds-size-space-200);              /* 8px */
+  border-radius: var(--sds-size-radius-200);   /* 8px */
+  border: var(--sds-size-stroke-border) solid #FFF;  /* 1px solid white */
+  background: #464549;
+
+  /* 버튼 기본 보정 (Figma 원본에는 없지만 실제 <button> 사용 시 필요) */
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  white-space: nowrap;          /* 텍스트 줄바꿈 방지 */
+  cursor: pointer;
+}

@@ -1,0 +1,35 @@
+/* ============================================
+   hsv-display.css — 상단 색상/H/S/V 표시 카드
+   ============================================ */
+
+.hsv-display {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  height: 72px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hsv-display__preview {
+  width: 64px;
+  height: 26px;
+  background-color: #D9D9F7;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.hsv-display__label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #232121;
+  letter-spacing: -0.2px;
+  flex: 1;
+  text-align: center;
+}
+
+/* 첫 번째 라벨(H:)은 preview 다음에 약간 간격을 두기 위해 */
+.hsv-display__label:first-of-type {
+  margin-left: 80px;
+}

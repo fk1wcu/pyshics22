@@ -1,0 +1,86 @@
+/* ============================================
+   color-swatch.css — "첫 번째 색상" / "마지막 색상" 표시
+   ============================================ */
+
+.color-swatch {
+  border-top: 1px solid #464549;
+  padding-top: 14px;
+  margin-top: 4px;
+}
+
+.color-swatch__label {
+  display: block;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+}
+
+.color-swatch__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background-color: #1a1a1a;
+  border-radius: 6px;
+}
+
+/* 색상 박스 + HEX 코드 세로 묶음 */
+.color-swatch__box-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.color-swatch__box {
+  width: 84px;
+  height: 38px;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  border: 1px solid #D9D9D9;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.color-swatch__box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-swatch__box:active {
+  transform: scale(0.98);
+}
+
+/* HEX 코드 표시 (박스 바로 밑) */
+.color-swatch__hex {
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: 'Courier New', Consolas, monospace;
+  user-select: all;
+}
+
+.color-swatch__info {
+  color: #D9D9D9;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  line-height: 1.8;
+  flex: 1;
+  white-space: pre-line;
+}
+
+/* OpenCV HSV 값 (info 영역 안에서 작게, 옆에) */
+.opencv-val {
+  color: #888888;
+  font-size: 9px;
+  font-weight: 400;
+  margin-left: 6px;
+  letter-spacing: -0.1px;
+}

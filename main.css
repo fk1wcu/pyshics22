@@ -1,0 +1,53 @@
+/* ============================================
+   main.css — 전체 레이아웃 (1440 x 1024 고정)
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F2F2F7;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system,
+               BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  color: #232121;
+  overflow: hidden;
+  /* 한글 단어 중간 줄바꿈 방지 */
+  word-break: keep-all;
+}
+
+/* 전체 앱 컨테이너 */
+.app {
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+/* 좌측 사이드바 */
+.sidebar {
+  width: clamp(150px, 20%, 220px);
+  height: 100%;
+  background-color: #232121;
+  border-radius: 12px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+/* 우측 메인 영역 */
+.content {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}

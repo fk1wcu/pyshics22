@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1">
+  <title>Desktop - 1</title>
+
+  <!-- 한글 폰트 (Pretendard) -->
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+  <!-- 메인 레이아웃 -->
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- 버튼별 CSS (각 버튼마다 분리) -->
+  <link rel="stylesheet" href="css/buttons/upload-area.css">
+  <link rel="stylesheet" href="css/buttons/first-photo-btn.css">
+  <link rel="stylesheet" href="css/buttons/last-photo-btn.css">
+  <link rel="stylesheet" href="css/buttons/eyedropper-btn.css">
+  <link rel="stylesheet" href="css/buttons/start-btn.css">
+
+  <!-- 컴포넌트별 CSS -->
+  <link rel="stylesheet" href="css/components/color-swatch.css">
+  <link rel="stylesheet" href="css/components/hsv-display.css">
+  <link rel="stylesheet" href="css/components/image-area.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ====== 좌측 사이드바 ====== -->
+    <aside class="sidebar">
+
+      <!-- 업로드 영역 -->
+      <div class="upload-area" id="uploadArea">
+        <svg class="upload-area__icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <div class="upload-area__text">
+          이미지 파일을 드래그하거나<br>클릭하여 업로드
+        </div>
+      </div>
+
+      <!-- 첫 번째 사진 선택 버튼 -->
+      <button class="first-photo-btn" type="button">
+        <svg class="first-photo-btn__icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
+        <span>첫 번째 사진 선택</span>
+      </button>
+
+      <!-- 마지막 사진 선택 버튼 -->
+      <button class="last-photo-btn" type="button">
+        <svg class="last-photo-btn__icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
+        <span>마지막 사진 선택</span>
+      </button>
+
+      <!-- 스포이드(eyedropper) 버튼 -->
+      <button class="eyedropper-btn" type="button" aria-label="스포이드">
+        <svg class="eyedropper-btn__icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5L6 10l-3 3v3h3l3-3 5-5"/>
+          <path d="M14 8l3 3"/>
+          <path d="M16 6l3-3 2 2-3 3"/>
+        </svg>
+      </button>
+
+      <!-- 스포이드 크기 슬라이더 -->
+      <div class="eyedropper-size">
+        <span class="eyedropper-size__label">크기: <span id="eyedropperSizeDisplay">1×1</span></span>
+        <input type="range" id="eyedropperSize" class="eyedropper-size__slider"
+               min="1" max="50" value="1" step="1">
+      </div>
+
+      <!-- 첫 번째 색상 -->
+      <div class="color-swatch">
+        <span class="color-swatch__label">첫 번째 색상</span>
+        <div class="color-swatch__content">
+          <div class="color-swatch__box-wrapper">
+            <div class="color-swatch__box" id="firstColorBox"></div>
+            <div class="color-swatch__hex" id="firstColorHex">#------</div>
+          </div>
+          <div class="color-swatch__info" id="firstColorInfo">H: -, S: -, V: -</div>
+        </div>
+      </div>
+
+      <!-- 마지막 색상 -->
+      <div class="color-swatch">
+        <span class="color-swatch__label">마지막 색상</span>
+        <div class="color-swatch__content">
+          <div class="color-swatch__box-wrapper">
+            <div class="color-swatch__box" id="lastColorBox"></div>
+            <div class="color-swatch__hex" id="lastColorHex">#------</div>
+          </div>
+          <div class="color-swatch__info" id="lastColorInfo">H: -, S: -, V: -</div>
+        </div>
+      </div>
+
+      <!-- 시작 버튼 -->
+      <button class="figma-button" type="button">시작</button>
+
+    </aside>
+
+    <!-- ====== 우측 메인 영역 ====== -->
+    <main class="content">
+
+      <!-- 상단 HSV 표시 영역 -->
+      <div class="hsv-display">
+        <div class="hsv-display__preview" id="colorPreview"></div>
+        <span class="hsv-display__label">H:</span>
+        <span class="hsv-display__label">S:</span>
+        <span class="hsv-display__label">V:</span>
+      </div>
+
+      <!-- 메인 이미지 영역 -->
+      <div class="image-area">
+        <svg class="image-area__placeholder" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;">
+
+  <script src="app.js"></script>
+</body>
+</html>

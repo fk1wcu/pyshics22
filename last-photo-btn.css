@@ -1,0 +1,32 @@
+/* ============================================
+   last-photo-btn.css — "마지막 사진 선택" 버튼
+   ============================================ */
+
+.last-photo-btn {
+  background-color: #232121;
+  border: 1px solid #464549;
+  border-radius: 6px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s ease;
+}
+
+.last-photo-btn:hover {
+  border-color: #D9D9D9;
+}
+
+.last-photo-btn__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
